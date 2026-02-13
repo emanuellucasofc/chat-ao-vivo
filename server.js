@@ -5,11 +5,14 @@ const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  maxHttpBufferSize: 1e8
+});
 
 app.use(express.static(path.join(__dirname, "public")));
 
 let onlineCount = 0;
+let activeUsers = new Set();
 
 function broadcastOnline() {
   io.emit("online", onlineCount);
@@ -19,21 +22,39 @@ io.on("connection", (socket) => {
   onlineCount++;
   broadcastOnline();
 
-  console.log("Usuário conectado:", socket.id);
+  socket.on("join", (name, callback) => {
+    name = name.trim();
 
-  socket.on("join", (name) => {
+    if (name.length < 2 || name.length > 20) {
+      return callback({ error: "Nome inválido." });
+    }
+
+    if (activeUsers.has(name)) {
+      return callback({ error: "Nome já está em uso." });
+    }
+
     socket.data.name = name;
+    activeUsers.add(name);
+
     socket.broadcast.emit("system", `${name} entrou no chat`);
+    callback({ success: true });
   });
 
-  socket.on("chatMessage", (msg) => {
-    const name = socket.data.name || "Anônimo";
-    io.emit("message", { name, msg });
+  socket.on("chatMessage", (data) => {
+    const name = socket.data.name;
+    if (!name) return;
+
+    io.emit("message", {
+      name,
+      msg: data.msg,
+      type: data.type || "text"
+    });
   });
 
   socket.on("disconnect", () => {
     const name = socket.data.name;
     if (name) {
+      activeUsers.delete(name);
       io.emit("system", `${name} saiu do chat`);
     }
 
