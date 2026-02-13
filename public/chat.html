@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat ao Vivo</title>
+  <style>
+    body { margin:0; font-family: system-ui, Arial; background:#0b1220; color:#eaf0ff; }
+    .topbar { position:sticky; top:0; background:#101a33; border-bottom:1px solid rgba(255,255,255,.08); padding:14px 16px; display:flex; align-items:center; justify-content:space-between; }
+    .title { font-weight:800; }
+    .me { color: rgba(234,240,255,.75); font-size: 13px; }
+
+    .chat { max-width:900px; margin:0 auto; padding:16px; height: calc(100vh - 132px); overflow-y:auto; }
+    .bubble { max-width: 70%; padding:10px 12px; border-radius: 14px; margin: 10px 0; border:1px solid rgba(255,255,255,.10); }
+    .bubble .meta { font-size: 12px; opacity: .75; margin-bottom: 4px; }
+    .bubble.other { background:#101a33; margin-right:auto; border-top-left-radius: 6px; }
+    .bubble.mine { background:#143059; margin-left:auto; border-top-right-radius: 6px; }
+    .system { text-align:center; font-size:12px; opacity:.7; margin:12px 0; }
+
+    .composer { position:sticky; bottom:0; background:#0b1220; border-top:1px solid rgba(255,255,255,.08); padding:12px 16px; }
+    .row { max-width:900px; margin:0 auto; display:flex; gap:10px; }
+    input { flex:1; padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:#050913; color:#eaf0ff; outline:none; }
+    input:focus { border-color: rgba(130,170,255,.7); box-shadow: 0 0 0 3px rgba(130,170,255,.15); }
+    button { padding:12px 14px; border:0; border-radius:12px; background:#3b82f6; color:white; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Chat ao Vivo</div>
+    <div class="me">
+      <span id="me"></span> · <span id="online">0 online</span>
+    </div>
+  </div>
+
+  <div class="chat" id="messages"></div>
+
+  <div class="composer">
+    <form id="chatForm">
+      <div class="row">
+        <input id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off" />
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>

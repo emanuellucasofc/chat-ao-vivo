@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Entrar no Chat</title>
+  <style>
+    body { margin:0; font-family: system-ui, Arial; background:#0b1220; color:#eaf0ff; }
+    .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .card { width:100%; max-width:420px; background:#101a33; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:20px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    h1 { margin:0 0 8px; font-size:22px; }
+    p { margin:0 0 16px; color:rgba(234,240,255,.75); }
+    .row { display:flex; gap:10px; }
+    input { flex:1; padding:12px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:#0b1220; color:#eaf0ff; outline:none; }
+    input:focus { border-color: rgba(130,170,255,.7); box-shadow: 0 0 0 3px rgba(130,170,255,.15); }
+    button { padding:12px 14px; border:0; border-radius:12px; background:#3b82f6; color:white; font-weight:600; cursor:pointer; }
+    button:hover { filter:brightness(1.05); }
+    .err { margin-top:10px; color:#ffb4b4; display:none; }
+    .footer { margin-top:14px; font-size:12px; color:rgba(234,240,255,.55); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Entrar no Chat</h1>
+      <p>Digite seu nome para começar.</p>
+
+      <form id="form">
+        <div class="row">
+          <input id="name" placeholder="Seu nome" maxlength="20" autocomplete="off" />
+          <button type="submit">Entrar</button>
+        </div>
+        <div id="err" class="err">Digite um nome válido (2 a 20 caracteres).</div>
+      </form>
+
+      <div class="footer">Dica: abra duas abas para testar o tempo real.</div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("form");
+    const input = document.getElementById("name");
+    const err = document.getElementById("err");
+
+    input.focus();
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = input.value.trim();
+
+      if (name.length < 2 || name.length > 20) {
+        err.style.display = "block";
+        return;
+      }
+
+      err.style.display = "none";
+      localStorage.setItem("chat_name", name);
+      window.location.assign("chat.html");
+    });
+  </script>
+</body>
+</html>
